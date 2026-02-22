@@ -1,6 +1,6 @@
 <div align="center">
-<h1>ChronoDeck | v1.1.0</h1>
-<p style="font-size: 1.2rem; color: #cbd5e0;">3D interaktif · alarm adzan · musik lokal · bulan fotorealistik</p>
+<h1>ChronoDeck | v1.2.0</h1>
+<p style="font-size: 1.2rem; color: #cbd5e0;">background interaktif · jadwal adzan · musik lokal</p>
   
 ![Static Badge](https://img.shields.io/badge/Font_Awesome-528DD7?style=flat-square&logo=fontawesome&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/Three.js-000000?style=flat-square&logo=three.js&logoColor=white)
@@ -9,7 +9,7 @@
 
 <h2>Tentang Proyek</h2>
 <p>
-ChronoDeck adalah website 3D interaktif dengan visual bulan fotorealistik dan bintang berkedip alami, dilengkapi sistem alarm otomatis untuk waktu sholat. Dirancang sebagai teman ngoding, istirahat, dan ibadah — tanpa meninggalkan suasana tenang.
+ChronoDeck-V2 adalah website interaktif dengan tampilan visual yang modern, dilengkapi sistem adzan otomatis setiap waktu sholat. Dirancang sebagai teman ngoding, dan istirahat anda — tanpa harus lupa dengan waktu ibadah anda.
 </p>
 
 <div align="center">
@@ -23,25 +23,21 @@ ChronoDeck adalah website 3D interaktif dengan visual bulan fotorealistik dan bi
 
 <h2>Fitur Utama</h2>
 <ul>
-  <li>Bulan 3D + ribuan bintang dengan shader autentik</li>
-  <li>OrbitControls — bebas memutar dan zoom</li>
   <li>Music player lokal — upload file audio sendiri</li>
   <li>Playlist berurutan dengan auto-next</li>
   <li>Nama lagu berjalan (marquee effect)</li>
-  <li>Alarm otomatis 10 menit sebelum waktu adzan</li>
   <li>Adzan otomatis tepat waktu</li>
   <li>Notifikasi berkedip layar penuh saat alarm/adzan</li>
   <li>Volume otomatis maksimal saat alarm/adzan</li>
   <li>Waktu sholat realtime berdasarkan lokasi</li>
-  <li>Countdown ke sholat berikutnya</li>
   <li>Refresh lokasi manual</li>
-  <li>Desain glassmorphism</li>
-  <li>Responsif untuk semua perangkat</li>
+  <li>Desain modern</li>
+  <li>Responsif untuk device desktop</li>
 </ul>
 
 <h2>Demo</h2>
 <p>
-<a href="https://neveerlabs.github.io/ChronoDeck/">https://neveerlabs.github.io/ChronoDeck/</a><br>
+<a href="https://neveerlabs.github.io/ChronoDeck/">https://nflora-ux.github.io/ChronoDeck-V2/</a><br>
 Atau jalankan secara lokal dengan membuka <code>index.html</code>.
 </p>
 
@@ -59,15 +55,14 @@ Atau jalankan secara lokal dengan membuka <code>index.html</code>.
 
 <h2>Cara Menggunakan</h2>
 <ol>
-  <li>Buka <code>index.html</code> di browser modern (Chrome, Edge, Firefox)</li>
+  <li>Buka <code>index.html</code> di browser modern (Chrome, Edge, Firefox, Brave)</li>
   <li>Upload musik melalui tombol <code>upload</code></li>
   <li>Kontrol player: Play/Pause, Previous/Next</li>
-  <li>Izinkan akses lokasi untuk jadwal sholat akurat</li>
+  <li>Izinkan akses lokasi untuk jadwal sholat yang lebih akurat</li>
   <li>Website otomatis:
     <ul>
       <li>Menentukan jadwal sholat hari ini</li>
-      <li>Menghitung alarm 10 menit sebelum adzan</li>
-      <li>Memunculkan notifikasi berkedip + suara alarm/adzan</li>
+      <li>Memunculkan notifikasi berkedip + suara adzan</li>
     </ul>
   </li>
   <li>Klik ikon lokasi untuk memperbarui koordinat</li>
@@ -80,12 +75,11 @@ Atau jalankan secara lokal dengan membuka <code>index.html</code>.
 <pre><code>ChronoDeck/
 │
 ├── index.html          # halaman utama
-├── style.css           # UI glassmorphism dan animasi
+├── style.css           # UI frontend
 ├── script.js           # Three.js, prayer API, audio engine
 │
-├── sound/              # folder suara (isi manual)
-│   ├── alarm.mp3       # suara 10 menit sebelum adzan
-│   └── adzan.mp3       # suara adzan
+├── sound/              # folder sound/audio
+│   └── adzan.mp3       # sound adzan
 └── favicon.png</code></pre>
 
 <h2>Catatan Penting</h2>
@@ -93,8 +87,7 @@ Atau jalankan secara lokal dengan membuka <code>index.html</code>.
   <li>Browser membutuhkan interaksi pengguna pertama kali sebelum audio dapat diputar (kebijakan autoplay).</li>
   <li>Jika tidak memberikan izin lokasi, fallback ke koordinat Jakarta atau deteksi berbasis IP via ipapi.co.</li>
   <li>API Adzan menggunakan method 2 (ISNA) — dapat diubah di script.js.</li>
-  <li>Folder <code>sound/</code> tidak disertakan dalam repository. Silakan masukkan file <code>alarm.mp3</code> dan <code>adzan.mp3</code> secara manual.</li>
-  <li>Untuk pengalaman terbaik, gunakan headphone dan redupkan cahaya ruangan.</li>
+  <li>Untuk pengalaman terbaik, gunakan laptop/PC dan redupkan cahaya ruangan.</li>
 </ul>
 
 <h2>Rencana Pengembangan</h2>
@@ -120,7 +113,6 @@ Diizinkan untuk digunakan, dimodifikasi, dan didistribusikan secara bebas untuk 
 <div class="footer">
   <p>Dibuat dengan niat untuk teman ngoding dan siapa pun yang ingin tetap ingat waktu di tengah layar.</p>
   <p style="font-size: 1.1rem; color: #ffdcaa; margin-top: 1rem;">Neverlabs · 2026</p>
-  <p style="font-style: italic; color: #a0b3c5;">Langit bukan batas, tapi pengingat.</p>
 </div>
 
 </div>
