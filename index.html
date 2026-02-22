@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChronoDeck | v1.2.0</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <video id="bg-video" autoplay muted loop playsinline src="img/video.mp4"></video>
+
+    <div class="overlay">
+        <div class="top-bar">
+            <div class="date-time">
+                <span id="current-datetime">-- --- ---- --:--:--</span>
+                <button id="open-settings-clock" class="icon-btn"><i class="fas fa-clock"></i></button>
+            </div>
+        </div>
+
+        <div class="music-player">
+            <div class="track-info">
+                <span id="track-name" class="marquee">—  tidak ada musik  —</span>
+            </div>
+            <div class="controls">
+                <button id="prev-btn" class="control-btn"><i class="fas fa-step-backward"></i></button>
+                <button id="play-pause-btn" class="control-btn"><i class="fas fa-play"></i></button>
+                <button id="next-btn" class="control-btn"><i class="fas fa-step-forward"></i></button>
+                <button id="upload-btn" class="control-btn"><i class="fas fa-upload"></i></button>
+                <button id="settings-btn" class="control-btn"><i class="fas fa-gear"></i></button>
+            </div>
+            <input type="file" id="file-input" accept="audio/*" multiple>
+        </div>
+
+        <div id="notification-box" class="notification hidden">
+            <div class="notification-content">
+                <span id="notification-message"></span>
+                <button id="close-notification"><i class="fas fa-xmark"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="settings-modal hidden">
+        <div class="settings-modal-content">
+            <div class="settings-header">
+                <h2>Settings</h2>
+                <button id="close-settings"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="settings-tabs">
+                <button class="tab-btn active" data-tab="data">Data</button>
+                <button class="tab-btn" data-tab="time">Time</button>
+                <button class="tab-btn" data-tab="about">About</button>
+            </div>
+            <div class="settings-panel">
+                <div class="tab-pane active" id="tab-data">
+                    <h3>Audio Library</h3>
+                    <ul id="audio-list" class="file-list"></ul>
+                    <h3>Backgrounds</h3>
+                    <ul id="background-list" class="file-list"></ul>
+                    <button id="upload-background-btn" class="action-btn"><i class="fas fa-upload"></i> Upload Background</button>
+                    <input type="file" id="background-input" accept="video/*,image/*" style="display:none;">
+                </div>
+                <div class="tab-pane" id="tab-about">
+                    <p><strong>ChronoDeck</strong> — teman ngoding dan alarm sholat.</p>
+                    <p>Versi 1.2.0</p>
+                    <div class="contact-icons">
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="far fa-envelope"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                    <p><i class="fas fa-scale-balanced"></i> MIT License</p>
+                    <p><i class="fas fa-lock"></i> Ketentuan privasi</p>
+                </div>
+                <div class="tab-pane" id="tab-time">
+                    <div class="current-time-big" id="live-clock">--:--:--</div>
+                    <div class="current-date" id="live-date">---, -- --- ----</div>
+                    <h4>Jadwal Sholat Hari Ini</h4>
+                    <ul id="prayer-times-list" class="prayer-list"></ul>
+                    <p class="location-note" id="prayer-location"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
