@@ -1,6 +1,8 @@
 const video = document.getElementById('bg-video');
 const audioAdzan = new Audio('sound/adzan.mp3');
 audioAdzan.volume = 1.0;
+const audioAlarm = new Audio('sound/alarm.mp3');
+audioAlarm.volume = 1.0;
 
 let musicPlaylist = [];
 let currentTrackIndex = -1;
@@ -8,6 +10,12 @@ let musicAudio = new Audio();
 let isMusicPlaying = false;
 let wasPlayingBeforeAdhan = false;
 let adhanActive = false;
+let alarmActive = false;
+let alarmWasPlaying = false;
+let adhanWasPlaying = false;
+let alarmTimeouts = [];
+let countdownInterval = null;
+let currentAdhanTime = null;
 
 const trackNameEl = document.getElementById('track-name');
 const playPauseBtn = document.getElementById('play-pause-btn');
@@ -18,6 +26,7 @@ const uploadBtn = document.getElementById('upload-btn');
 const fileInput = document.getElementById('file-input');
 const notificationBox = document.getElementById('notification-box');
 const notificationMsg = document.getElementById('notification-message');
+const notificationCountdown = document.getElementById('notification-countdown');
 const closeNotif = document.getElementById('close-notification');
 const settingsBtn = document.getElementById('settings-btn');
 const settingsModal = document.getElementById('settings-modal');
@@ -41,10 +50,28 @@ let db = null;
 let backgroundList = [];
 let audioFiles = [];
 
-closeNotif.addEventListener('click', () => notificationBox.classList.add('hidden'));
+closeNotif.addEventListener('click', () => {
+    if (alarmActive) {
+        audioAlarm.pause();
+        audioAlarm.currentTime = 0;
+        alarmActive = false;
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        if (!adhanActive && alarmWasPlaying) resumeMusic();
+        alarmWasPlaying = false;
+    } else if (adhanActive) {
+        audioAdzan.pause();
+        audioAdzan.currentTime = 0;
+        adhanActive = false;
+        if (!alarmActive && adhanWasPlaying) resumeMusic();
+        adhanWasPlaying = false;
+    }
+    notificationBox.classList.add('hidden');
+});
 
 function showNotification(message) {
     notificationMsg.textContent = message;
+    notificationCountdown.textContent = '';
     notificationBox.classList.remove('hidden');
 }
 
@@ -57,7 +84,7 @@ function pauseMusic() {
 }
 
 function resumeMusic() {
-    if (musicAudio.src && currentTrackIndex !== -1 && !adhanActive) {
+    if (musicAudio.src && currentTrackIndex !== -1 && !adhanActive && !alarmActive) {
         musicAudio.play().catch(() => {});
         isMusicPlaying = true;
         playPauseIcon.className = 'fas fa-pause';
@@ -351,10 +378,58 @@ fileInput.addEventListener('change', async (e) => {
     }
 });
 
+function handleAlarm(prayerName, adzanTime) {
+    if (adhanActive || alarmActive) return;
+    alarmActive = true;
+    alarmWasPlaying = isMusicPlaying;
+    pauseMusic();
+
+    audioAlarm.currentTime = 0;
+    audioAlarm.play().catch(() => {});
+
+    notificationMsg.textContent = `SIAP SIAP! Sebentar lagi adzan ${prayerName}!`;
+    notificationCountdown.textContent = '';
+    notificationBox.classList.remove('hidden');
+
+    currentAdhanTime = adzanTime;
+
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownInterval = setInterval(() => {
+        const now = Date.now();
+        const diff = adzanTime - now;
+        if (diff <= 0) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+            return;
+        }
+        const minutes = Math.floor(diff / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+        notificationCountdown.textContent = `${minutes}:${seconds.toString().padStart(2,'0')}`;
+    }, 1000);
+}
+
+audioAlarm.addEventListener('ended', () => {
+    if (alarmActive) {
+        alarmActive = false;
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        notificationBox.classList.add('hidden');
+        if (!adhanActive && alarmWasPlaying) resumeMusic();
+        alarmWasPlaying = false;
+    }
+});
+
 function handleAdhan(prayerName) {
     if (adhanActive) return;
+    if (alarmActive) {
+        audioAlarm.pause();
+        audioAlarm.currentTime = 0;
+        alarmActive = false;
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+    }
     adhanActive = true;
-    wasPlayingBeforeAdhan = isMusicPlaying;
+    adhanWasPlaying = isMusicPlaying;
     pauseMusic();
     audioAdzan.currentTime = 0;
     audioAdzan.volume = 1.0;
@@ -365,7 +440,8 @@ function handleAdhan(prayerName) {
 audioAdzan.addEventListener('ended', () => {
     adhanActive = false;
     notificationBox.classList.add('hidden');
-    if (wasPlayingBeforeAdhan) resumeMusic();
+    if (!alarmActive && adhanWasPlaying) resumeMusic();
+    adhanWasPlaying = false;
 });
 
 async function fetchPrayerTimes(lat, lon) {
@@ -378,6 +454,9 @@ async function fetchPrayerTimes(lat, lon) {
 function schedulePrayerEvents(timings) {
     prayerTimeouts.forEach(clearTimeout);
     prayerTimeouts = [];
+    alarmTimeouts.forEach(clearTimeout);
+    alarmTimeouts = [];
+
     const now = new Date();
     const prayerMap = {
         'Fajr': 'Subuh',
@@ -386,6 +465,7 @@ function schedulePrayerEvents(timings) {
         'Maghrib': 'Maghrib',
         'Isha': 'Isya'
     };
+
     Object.entries(prayerMap).forEach(([en, id]) => {
         const timeStr = timings[en];
         if (!timeStr) return;
@@ -393,20 +473,33 @@ function schedulePrayerEvents(timings) {
         const prayerDate = new Date(now);
         prayerDate.setHours(h, m, 0, 0);
         if (prayerDate < now) prayerDate.setDate(prayerDate.getDate() + 1);
-        const adhanTime = prayerDate.getTime();
+
+        const alarmDate = new Date(prayerDate.getTime() - 10 * 60000);
         const nowTime = now.getTime();
-        if (adhanTime > nowTime) {
-            prayerTimeouts.push(setTimeout(() => {
+        const adzanTime = prayerDate.getTime();
+
+        if (alarmDate > nowTime) {
+            const timeoutId = setTimeout(() => {
+                handleAlarm(id, adzanTime);
+            }, alarmDate - nowTime);
+            alarmTimeouts.push(timeoutId);
+        }
+
+        if (adzanTime > nowTime) {
+            const timeoutId = setTimeout(() => {
                 handleAdhan(id);
-            }, adhanTime - nowTime));
+            }, adzanTime - nowTime);
+            prayerTimeouts.push(timeoutId);
         }
     });
+
     const midnight = new Date(now);
     midnight.setDate(midnight.getDate() + 1);
     midnight.setHours(0, 0, 0, 0);
-    prayerTimeouts.push(setTimeout(() => {
+    const timeoutId = setTimeout(() => {
         fetchAndSchedule();
-    }, midnight.getTime() - nowTime));
+    }, midnight.getTime() - nowTime);
+    prayerTimeouts.push(timeoutId);
 }
 
 function updatePrayerList(timings) {
