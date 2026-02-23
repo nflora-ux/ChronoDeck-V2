@@ -187,6 +187,13 @@ body {
     font-weight: 500;
 }
 
+.countdown {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #ffd966;
+    margin-left: auto;
+}
+
 #close-notification {
     background: transparent;
     border: none;
