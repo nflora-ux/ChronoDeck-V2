@@ -93,9 +93,6 @@ function resumeMusic() {
 
 function playTrack(index) {
     if (!musicPlaylist.length || index < 0 || index >= musicPlaylist.length) return;
-    if (musicAudio.src) {
-        URL.revokeObjectURL(musicAudio.src);
-    }
     currentTrackIndex = index;
     const item = musicPlaylist[currentTrackIndex];
     musicAudio.src = item.url;
