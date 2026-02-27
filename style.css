@@ -150,6 +150,11 @@ body {
     transform: scale(1.1);
 }
 
+.control-btn.active {
+    color: #ffd966;
+    text-shadow: 0 0 10px #ffb86b;
+}
+
 #file-input {
     display: none;
 }
