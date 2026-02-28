@@ -1,5 +1,5 @@
 <div align="center">
-<h1>ChronoDeck | v1.2.0</h1>
+<h1>ChronoDeck | v2.3.1.0</h1>
 <p style="font-size: 1.2rem; color: #cbd5e0;">background interaktif · jadwal adzan · musik lokal</p>
   
 ![Static Badge](https://img.shields.io/badge/Font_Awesome-528DD7?style=flat-square&logo=fontawesome&logoColor=white)
@@ -111,7 +111,7 @@ Diizinkan untuk digunakan, dimodifikasi, dan didistribusikan secara bebas untuk 
 </p>
 
 <div class="footer">
-  <p>Dibuat dengan niat untuk teman ngoding dan siapa pun yang ingin tetap ingat waktu di tengah layar.</p>
+  <p>Dibuat dengan niat untuk teman ngoding/kerja dan siapa pun yang sedang bekerja didepan layar.</p>
   <p style="font-size: 1.1rem; color: #ffdcaa; margin-top: 1rem;">Neverlabs · 2026</p>
 </div>
 
