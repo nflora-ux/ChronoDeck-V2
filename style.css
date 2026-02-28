@@ -1,3 +1,5 @@
+/* root/style.css */
+
 * {
     margin: 0;
     padding: 0;
@@ -416,4 +418,72 @@ body {
 @media (max-width: 480px) {
     .date-time { flex-wrap: wrap; justify-content: center; }
     .notification { min-width: 260px; }
+}
+
+.location-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0 10px;
+    flex-wrap: wrap;
+}
+
+.location-dropdown {
+    background: #1f404f;
+    border: 1px solid #dba959;
+    color: #faeacb;
+    font-size: 0.95rem;
+    padding: 10px 25px 10px 15px;
+    border-radius: 40px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5cb8b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+    flex: 1;
+    min-width: 180px;
+    cursor: pointer;
+}
+
+.location-dropdown:hover {
+    border-color: #ffc96e;
+    background-color: #295464;
+}
+
+.zone-badges {
+    display: flex;
+    gap: 5px;
+}
+
+.zone-badge {
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: #283b46;
+    color: #cec09c;
+    transition: 0.2s;
+}
+
+.zone-badge.wib.active { background: #2b6a42; color: white; box-shadow: 0 0 8px #5cb85c; }
+.zone-badge.wita.active { background: #b47d4b; color: white; box-shadow: 0 0 8px #f0b27a; }
+.zone-badge.wit.active { background: #aa4e4e; color: white; box-shadow: 0 0 8px #e99797; }
+
+.location-coords {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.prayer-list {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.prayer-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed rgba(255,215,140,0.2);
 }
