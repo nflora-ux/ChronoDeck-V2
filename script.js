@@ -1,3 +1,5 @@
+// root/script.js
+
 const video = document.getElementById('bg-video');
 const audioAdzan = new Audio('sound/adzan.mp3');
 audioAdzan.volume = 1.0;
@@ -46,14 +48,79 @@ const liveDate = document.getElementById('live-date');
 const prayerTimesList = document.getElementById('prayer-times-list');
 const prayerLocation = document.getElementById('prayer-location');
 const currentDatetimeEl = document.getElementById('current-datetime');
+const locationSelect = document.getElementById('prayer-location-select');
+const zoneBadgeWIB = document.getElementById('zoneBadgeWIB');
+const zoneBadgeWITA = document.getElementById('zoneBadgeWITA');
+const zoneBadgeWIT = document.getElementById('zoneBadgeWIT');
+const locationCoords = document.getElementById('location-coords');
+const LOCATIONS = [
+    { name: 'Jakarta Pusat (WIB)', lat: -6.2088, lon: 106.8456, tz: 7, zone: 'WIB' },
+    { name: 'Surabaya, Jatim (WIB)', lat: -7.2504, lon: 112.7688, tz: 7, zone: 'WIB' },
+    { name: 'Bandung, Jabar (WIB)', lat: -6.9175, lon: 107.6191, tz: 7, zone: 'WIB' },
+    { name: 'Banjarmasin, Kalsel (WITA)', lat: -3.3271, lon: 114.5945, tz: 8, zone: 'WITA' },
+    { name: 'Denpasar, Bali (WITA)', lat: -8.6705, lon: 115.2126, tz: 8, zone: 'WITA' },
+    { name: 'Makassar, Sulsel (WITA)', lat: -5.1477, lon: 119.4322, tz: 8, zone: 'WITA' },
+    { name: 'Jayapura, Papua (WIT)', lat: -2.5309, lon: 140.7181, tz: 9, zone: 'WIT' },
+    { name: 'Ambon, Maluku (WIT)', lat: -3.6964, lon: 128.1798, tz: 9, zone: 'WIT' },
+    { name: 'Pekanbaru (WIB)', lat: 0.5071, lon: 101.4478, tz: 7, zone: 'WIB' },
+    { name: 'Wonogiri, Jateng (WIB)', lat: -7.9797, lon: 110.8290, tz: 7, zone: 'WIB' },
+    { name: 'Pontianak (WIB)', lat: -0.0263, lon: 109.3425, tz: 7, zone: 'WIB' },
+    { name: 'Singaraja, Bali (WITA)', lat: -8.1126, lon: 115.0881, tz: 8, zone: 'WITA' },
+    { name: 'Bima, NTB (WITA)', lat: -8.4665, lon: 118.7260, tz: 8, zone: 'WITA' },
+    { name: 'Palangkaraya (WIB)', lat: -2.2161, lon: 113.9133, tz: 7, zone: 'WIB' },
+    { name: 'Kendari, Sultra (WITA)', lat: -4.0235, lon: 122.5137, tz: 8, zone: 'WITA' },
+    { name: 'Palopo, Sulsel (WITA)', lat: -3.0011, lon: 120.1964, tz: 8, zone: 'WITA' },
+    { name: 'Balikpapan (WITA)', lat: -1.2698, lon: 116.8278, tz: 8, zone: 'WITA' },
+    { name: 'Mamuju, Sulbar (WITA)', lat: -2.2126, lon: 117.9872, tz: 8, zone: 'WITA' },
+    { name: 'Nabire, Papua (WIT)', lat: -3.3819, lon: 135.4713, tz: 9, zone: 'WIT' },
+    { name: 'Passo, Maluku (WIT)', lat: -3.6554, lon: 128.1904, tz: 9, zone: 'WIT' }
+];
 
-let currentLocation = { lat: -6.2088, lon: 106.8456 };
+let currentLocation = { ...LOCATIONS[0] }; // default Jakarta
 let prayerTimings = {};
 let prayerTimeouts = [];
 let db = null;
 let backgroundList = [];
 let audioFiles = [];
 let currentBackgroundUrl = null;
+
+// Inisialisasi dropdown lokasi
+function initLocationDropdown() {
+    LOCATIONS.forEach(loc => {
+        const option = document.createElement('option');
+        option.value = `${loc.lat},${loc.lon},${loc.tz},${loc.zone}`;
+        option.textContent = loc.name;
+        locationSelect.appendChild(option);
+    });
+    locationSelect.value = `${currentLocation.lat},${currentLocation.lon},${currentLocation.tz},${currentLocation.zone}`;
+    updateZoneBadge(currentLocation.zone);
+    locationCoords.textContent = `${currentLocation.lat.toFixed(4)}, ${currentLocation.lon.toFixed(4)} (${currentLocation.zone})`;
+}
+
+locationSelect.addEventListener('change', (e) => {
+    const val = e.target.value;
+    const parts = val.split(',');
+    if (parts.length === 4) {
+        currentLocation = {
+            lat: parseFloat(parts[0]),
+            lon: parseFloat(parts[1]),
+            tz: parseInt(parts[2]),
+            zone: parts[3]
+        };
+        updateZoneBadge(currentLocation.zone);
+        locationCoords.textContent = `${currentLocation.lat.toFixed(4)}, ${currentLocation.lon.toFixed(4)} (${currentLocation.zone})`;
+        fetchAndSchedule(); // hitung ulang jadwal
+    }
+});
+
+function updateZoneBadge(zone) {
+    zoneBadgeWIB.classList.remove('active');
+    zoneBadgeWITA.classList.remove('active');
+    zoneBadgeWIT.classList.remove('active');
+    if (zone === 'WIB') zoneBadgeWIB.classList.add('active');
+    else if (zone === 'WITA') zoneBadgeWITA.classList.add('active');
+    else if (zone === 'WIT') zoneBadgeWIT.classList.add('active');
+}
 
 closeNotif.addEventListener('click', () => {
     if (alarmActive) {
@@ -281,13 +348,14 @@ audioAdzan.addEventListener('ended', () => {
     adhanWasPlaying = false;
 });
 
-function computePrayerTimes(lat, lon) {
-    const prayTimes = window.prayTimes;
-    if (!prayTimes) return {};
-    prayTimes.setMethod('MWL');
-    prayTimes.tune({ imsak: 2, fajr: 2, dhuhr: 2, asr: 2, maghrib: 2, isha: 2 });
-    const date = new Date();
-    const times = prayTimes.getTimes(date, [lat, lon], 'auto', 'auto', '24h');
+function computePrayerTimes(lat, lon, tzOffset) {
+    const pray = new PrayTime('MWL');
+    pray.adjust({ fajr: 20, isha: 18 }); // parameter Kemenag (subuh 20°, isya 18°)
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const times = pray.getTimes([year, month, day], [lat, lon], tzOffset, 0, '24h');
     if (!times) return {};
     return {
         Fajr: times.fajr,
@@ -368,12 +436,12 @@ function updatePrayerList(timings) {
         }
     });
     prayerTimesList.innerHTML = html;
-    prayerLocation.textContent = `Lokasi: ${currentLocation.lat.toFixed(4)}, ${currentLocation.lon.toFixed(4)}`;
+    prayerLocation.textContent = `Lokasi: ${currentLocation.lat.toFixed(4)}, ${currentLocation.lon.toFixed(4)} (${currentLocation.zone})`;
 }
 
 function fetchAndSchedule() {
     try {
-        const timings = computePrayerTimes(currentLocation.lat, currentLocation.lon);
+        const timings = computePrayerTimes(currentLocation.lat, currentLocation.lon, currentLocation.tz);
         if (!timings.Fajr) {
             throw new Error('Invalid prayer times');
         }
@@ -383,28 +451,6 @@ function fetchAndSchedule() {
     } catch {
         prayerTimesList.innerHTML = '<li>Jadwal tidak tersedia</li>';
     }
-}
-
-function getLocationAndFetch() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                currentLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-                fetchAndSchedule();
-            },
-            () => {
-                fetch('https://ipapi.co/json/')
-                    .then(r => r.json())
-                    .then(d => {
-                        if (d.latitude && d.longitude) {
-                            currentLocation = { lat: d.latitude, lon: d.longitude };
-                            fetchAndSchedule();
-                        } else fetchAndSchedule();
-                    })
-                    .catch(() => fetchAndSchedule());
-            }
-        );
-    } else fetchAndSchedule();
 }
 
 function updateDateTimeDisplay() {
@@ -692,9 +738,9 @@ video.addEventListener('error', () => {
             video.src = url;
         }
     }
+    initLocationDropdown();
+    fetchAndSchedule();
+    setInterval(() => {
+        if (prayerTimings) updatePrayerList(prayerTimings);
+    }, 60000);
 })();
-
-getLocationAndFetch();
-setInterval(() => {
-    if (prayerTimings) updatePrayerList(prayerTimings);
-}, 60000);
