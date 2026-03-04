@@ -37,7 +37,7 @@ ChronoDeck-V2 adalah website interaktif dengan tampilan visual yang modern, dile
 
 <h2>Demo</h2>
 <p>
-<a href="https://neveerlabs.github.io/ChronoDeck-v2/">https://nflora-ux.github.io/ChronoDeck-V2/</a><br>
+<a href="https://nflora-ux.github.io/ChronoDeck-v2/">https://nflora-ux.github.io/ChronoDeck-V2/</a><br>
 Atau jalankan secara lokal dengan membuka <code>index.html</code>.
 </p>
 
@@ -118,4 +118,5 @@ Diizinkan untuk digunakan, dimodifikasi, dan didistribusikan secara bebas untuk 
 </div>
 </body>
 </html>
+
 
