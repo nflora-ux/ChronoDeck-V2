@@ -110,7 +110,9 @@ Copyright (c) 2026 Neverlabs
 Diizinkan untuk digunakan, dimodifikasi, dan didistribusikan secara bebas untuk keperluan pribadi maupun pembelajaran.
 </p>
 
-<div class="footer">
-  <p>Dibuat dengan niat untuk teman kerja dan siapa pun yang sedang bekerja didepan layar.</p>
+---
+
+<div class="center">
   <p style="font-size: 1.1rem; color: #ffdcaa; margin-top: 1rem;">Neverlabs · 2026</p>
 </div>
+
