@@ -112,5 +112,6 @@ Diizinkan untuk digunakan, dimodifikasi, dan didistribusikan secara bebas untuk 
 
 ---
 <div align="center">
-  <p style="font-size: 1.1rem; color: #ffdcaa; margin-top: 1rem;">$copy: 2026 Neverlabs. All right reserved.</p>
+  <p style="font-size: 1.1rem; color: #ffdcaa; margin-top: 1rem;"> $copy: 2026 Neverlabs. All right reserved.</p>
 </div>
+
