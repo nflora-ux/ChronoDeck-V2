@@ -9,7 +9,7 @@
 
 <h2>Tentang Proyek</h2>
 <p>
-ChronoDeck-V2 adalah website interaktif dengan tampilan visual yang modern, dilengkapi sistem adzan otomatis setiap waktu sholat. Dirancang sebagai teman ngoding, dan istirahat anda — tanpa harus lupa dengan waktu ibadah anda.
+ChronoDeck-V2 adalah website interaktif dengan tampilan visual yang modern, dilengkapi sistem adzan otomatis setiap waktu sholat. Dirancang sebagai teman kerja, dan istirahat anda — tanpa harus lupa dengan waktu ibadah anda.
 </p>
 
 <div align="center">
@@ -23,7 +23,7 @@ ChronoDeck-V2 adalah website interaktif dengan tampilan visual yang modern, dile
 
 <h2>Fitur Utama</h2>
 <ul>
-  <li>Music player lokal — upload file audio sendiri</li>
+  <li>Music player lokal — upload file audio secara lokal</li>
   <li>Playlist berurutan dengan auto-next</li>
   <li>Nama lagu berjalan (marquee effect)</li>
   <li>Adzan otomatis tepat waktu</li>
@@ -35,9 +35,9 @@ ChronoDeck-V2 adalah website interaktif dengan tampilan visual yang modern, dile
   <li>Responsif untuk device desktop</li>
 </ul>
 
-<h2>Demo</h2>
+<h2>Demo web</h2>
 <p>
-<a href="https://nflora-ux.github.io/ChronoDeck-v2/">https://nflora-ux.github.io/ChronoDeck-V2/</a><br>
+<a href="https://nflora-ux.github.io/ChronoDeck-V2/">https://nflora-ux.github.io/ChronoDeck-V2/</a><br>
 Atau jalankan secara lokal dengan membuka <code>index.html</code>.
 </p>
 
@@ -111,12 +111,6 @@ Diizinkan untuk digunakan, dimodifikasi, dan didistribusikan secara bebas untuk 
 </p>
 
 <div class="footer">
-  <p>Dibuat dengan niat untuk teman ngoding/kerja dan siapa pun yang sedang bekerja didepan layar.</p>
+  <p>Dibuat dengan niat untuk teman kerja dan siapa pun yang sedang bekerja didepan layar.</p>
   <p style="font-size: 1.1rem; color: #ffdcaa; margin-top: 1rem;">Neverlabs · 2026</p>
 </div>
-
-</div>
-</body>
-</html>
-
-
